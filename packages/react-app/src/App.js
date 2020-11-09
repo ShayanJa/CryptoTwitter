@@ -89,7 +89,7 @@ function App() {
       tweets.push(tweet)
     }
     console.log(tweets)
-    setTweets(tweets)
+    setTweets(tweets.reverse())
   }
   
   const tweet = async () => {
