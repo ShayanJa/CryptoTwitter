@@ -98,6 +98,10 @@ function App() {
     // send Tweet
     const tweetFactory = new Contract(addresses.tweetFactory, abis.tweetFactory, signer)
     const send = await tweetFactory.tweet(tweetMessage)
+    console.log(send)
+    send.wait().then(async () => {
+      await getTweets()
+    })
 
     
   }
