@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateTweets } from './actions'
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import { Web3Provider, getDefaultProvider } from '@ethersproject/providers'
+import { Web3Provider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
 
 import { addresses, abis } from '../../../contracts/src'

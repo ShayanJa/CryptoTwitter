@@ -11,7 +11,7 @@ function HomePage() {
   const [tweets, _, getTweets] = useTweets()
 
   useEffect(() => {
-    getTweets(10)
+    getTweets(15)
   }, [])
 
   return (
