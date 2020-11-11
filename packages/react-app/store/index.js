@@ -1,4 +1,3 @@
-import { createContext } from 'react'
 import { configureStore } from '@reduxjs/toolkit'
 import web3 from './web3/reducer'
 
