@@ -8,7 +8,7 @@ import { Contract } from '@ethersproject/contracts'
 
 import { addresses, abis } from '../../../contracts/src'
 
-const INFURA_ID = '73553220c64e4d0aabd2b0a7f1d8f3d3'
+const INFURA_ID = proccess.env.INFURA_ID
 
 export const useProvider = () => {
   const dispatch = useDispatch()

@@ -6,7 +6,6 @@ import WalletConnectProvider from '@walletconnect/web3-provider'
 const initialState = {
   tweets: []
 }
-const INFURA_ID = ''
 
 export default createReducer(initialState, (builder) =>
   builder
