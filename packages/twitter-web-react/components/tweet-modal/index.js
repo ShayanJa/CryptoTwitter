@@ -13,14 +13,6 @@ function TweetModal({ onModalClose = () => {}, onClick = () => {} }) {
 
   const onSubmit = async () => {
     try {
-      // const response = await fetch('/api/new', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   },
-      //   body: JSON.stringify({ tweet })
-      // })
-      // if (response.status !== 200) throw 'Twet gönderilemedi.'
       await sendTweet(tweet)
       tweetSet('')
       onModalClose()

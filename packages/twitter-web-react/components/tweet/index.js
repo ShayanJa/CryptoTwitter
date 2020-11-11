@@ -1,12 +1,13 @@
 import React from 'react'
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict'
-
+import { deleteTweet } from '../../store/web3/hooks'
 import styles from './style.module.css'
 import Photo from '../photo'
 import IconButton from '../button/icon'
 import * as Icon from '../icons'
 
 function Tweet({
+  id,
   created_at,
   retweet_count,
   favorite_count,
@@ -24,6 +25,10 @@ function Tweet({
   // user.name
   // user.profile_image_url_https
   // user.screen_name
+
+  if (userId == '0x0000000000000000000000000000000000000000') {
+    return <div />
+  }
 
   return (
     <article className={styles.tweet}>
@@ -71,6 +76,11 @@ function Tweet({
           <div className={styles.footerButton}>
             <IconButton className={styles.actionButton}>
               <Icon.Share />
+            </IconButton>
+          </div>
+          <div className={styles.footerButton} onClick={() => deleteTweet(id)}>
+            <IconButton className={styles.actionButton}>
+              <Icon.Close />
             </IconButton>
           </div>
         </footer>

@@ -64,10 +64,10 @@ export const useTweets = () => {
       const tweet = await tweetFactory.getTweet(id)
       tweets.push(tweet)
     }
-    console.log(tweets)
-    // setTweets(tweets.reverse())
+
     dispatch(updateTweets(tweets.reverse()))
   }, [dispatch])
+
   return [tweets, getTweets]
 }
 
@@ -82,4 +82,46 @@ export const sendTweet = async (txt) => {
     signer
   )
   const send = await tweetFactory.tweet(txt)
+  send.wait().then(async () => {
+    await getTweets()
+  })
+}
+
+export const deleteTweet = async (id) => {
+  const provider = new Web3Provider(window.web3.currentProvider)
+  const signer = await provider.getSigner()
+
+  // send Tweet
+  const tweetFactory = new Contract(
+    addresses.tweetFactory,
+    abis.tweetFactory,
+    signer
+  )
+  const send = await tweetFactory.deleteTweet(id)
+  send.wait().then(async () => {
+    await getTweets()
+  })
+}
+
+export const getTweets = async () => {
+  const provider = new Web3Provider(window.web3.currentProvider)
+
+  const signer = await provider.getSigner()
+  const address = await signer.getAddress()
+
+  // Get Tweet
+  const tweetFactory = new Contract(
+    addresses.tweetFactory,
+    abis.tweetFactory,
+    signer
+  )
+  const tweetIds = await tweetFactory.getUserTweetIds(address)
+
+  console.log(tweetIds)
+  let tweets = []
+  for (var id of tweetIds) {
+    const tweet = await tweetFactory.getTweet(id)
+    tweets.push(tweet)
+  }
+  return tweets
 }
