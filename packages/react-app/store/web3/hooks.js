@@ -39,11 +39,6 @@ export const useWalletConnect = () => {
     const _tweets = await getUserTweets()
     console.log(_tweets)
     dispatch(updateTweets(_tweets.reverse()))
-
-    // const provider = new Web3Provider(newProvider)
-    // window.web3.setProvider(provider)
-    // localStorage.setItem('provider', provider)
-    // console.log(provider)
   }, [dispatch])
 
   return [address, walletConnect]
