@@ -9,27 +9,11 @@ import ProfileBox from '../profile-box'
 import TweetModal from '../tweet-modal'
 import { Tweet } from '../icons'
 
-import { useProvider } from '../../store/web3/hooks'
-
-function WalletButton({ provider, loadWeb3Modal }) {
-  return (
-    <button
-      onClick={() => {
-        if (!provider) {
-          loadWeb3Modal()
-        } else {
-          logoutOfWeb3Modal()
-        }
-      }}
-    >
-      {!provider ? 'Connect Wallet' : 'Disconnect Wallet'}
-    </button>
-  )
-}
+import { useWalletConnect } from '../../store/web3/hooks'
 
 function Layout({ flat }) {
   const [isShowModal, isShowModalSet] = React.useState(false)
-  const [provider, setProvider] = useProvider()
+  const [address, connectWallet] = useWalletConnect()
 
   const onModalClose = () => {
     isShowModalSet(false)
@@ -50,9 +34,15 @@ function Layout({ flat }) {
         <TweetModal onModalClose={onModalClose} onClick={onModalClose} />
       )}
 
-      <div className={styles.profile} onClick={() => setProvider()}>
-        <ProfileBox flat={flat} />
-      </div>
+      {address ? (
+        <div className={styles.profile}>
+          <ProfileBox flat={flat} name={address} />
+        </div>
+      ) : (
+        <button className={styles.profile} onClick={() => connectWallet()}>
+          Connect Wallet
+        </button>
+      )}
     </div>
   )
 }

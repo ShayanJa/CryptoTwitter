@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateTweets } from './actions'
+import { updateTweets, connectWallet } from './actions'
 import Web3Modal from 'web3modal'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Web3Provider } from '@ethersproject/providers'
@@ -10,12 +10,12 @@ import { addresses, abis } from '../../../contracts/src'
 
 const INFURA_ID = process.env.INFURA_ID
 
-export const useProvider = () => {
+export const useWalletConnect = () => {
   const dispatch = useDispatch()
-  const provider = useSelector((state) => state.provider)
+  const address = useSelector((state) => state.web3.address)
 
   /* Open wallet selection modal. */
-  const setProvider = useCallback(async () => {
+  const walletConnect = useCallback(async () => {
     const web3Modal = new Web3Modal({
       network: 'mainnet',
       cacheProvider: true,
@@ -31,13 +31,19 @@ export const useProvider = () => {
     const newProvider = await web3Modal.connect()
     window.web3.setProvider(newProvider)
 
+    const provider = new Web3Provider(window.web3.currentProvider)
+    const accounts = await provider.listAccounts()
+    const address = accounts[0]
+    alert(address)
+    dispatch(connectWallet({ address }))
+
     // const provider = new Web3Provider(newProvider)
     // window.web3.setProvider(provider)
     // localStorage.setItem('provider', provider)
     // console.log(provider)
   }, [dispatch])
 
-  return [provider, setProvider]
+  return [address, walletConnect]
 }
 
 export const useTweets = () => {
@@ -118,7 +124,6 @@ export const getUserTweets = async () => {
   )
   const tweetIds = await tweetFactory.getUserTweetIds(address)
 
-  console.log(tweetIds)
   let tweets = []
   for (var id of tweetIds) {
     const tweet = await tweetFactory.getTweet(id)
@@ -128,23 +133,26 @@ export const getUserTweets = async () => {
 }
 
 export const getTweets = async (lastNTweets) => {
-  const provider = new Web3Provider(window.web3.currentProvider)
+  try {
+    const provider = new Web3Provider(window.web3.currentProvider)
 
-  const signer = await provider.getSigner()
+    const signer = await provider.getSigner()
 
-  // Get Tweet
-  const tweetFactory = new Contract(
-    addresses.tweetFactory,
-    abis.tweetFactory,
-    signer
-  )
+    // Get Tweet
+    const tweetFactory = new Contract(
+      addresses.tweetFactory,
+      abis.tweetFactory,
+      signer
+    )
 
-  const tweetCount = await tweetFactory.getTweetCount()
-  let tweets = []
-  for (var i = tweetCount; 0 < i && i > tweetCount - lastNTweets; i--) {
-    const tweet = await tweetFactory.getTweet(i)
-    tweets.push(tweet)
-    console.log(tweet)
+    const tweetCount = await tweetFactory.getTweetCount()
+    let tweets = []
+    for (var i = tweetCount; 0 < i && i > tweetCount - lastNTweets; i--) {
+      const tweet = await tweetFactory.getTweet(i)
+      tweets.push(tweet)
+    }
+    return tweets
+  } catch {
+    return []
   }
-  return tweets
 }
