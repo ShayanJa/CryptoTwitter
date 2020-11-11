@@ -1,19 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react'
-
-import styles from './index.module.css'
+import React, { useEffect } from 'react'
 
 import Layout from '../components/layout'
-import Tweet from '../components/tweet'
-import Loading from '../components/loading'
 import { useTweets } from '../store/web3/hooks'
+import Tweet from '../components/tweet'
+import { useDispatch } from 'react-redux'
 
-function HomePage() {
+function ExplorePage() {
   const [tweets, getTweets] = useTweets()
-
   useEffect(() => {
     getTweets()
   }, [])
-
   return (
     <Layout>
       {tweets && tweets.length > 0 ? (
@@ -21,12 +17,10 @@ function HomePage() {
           return <Tweet {...tweet}></Tweet>
         })
       ) : (
-        <div className={styles.loading}>
-          <Loading />
-        </div>
+        <div />
       )}
     </Layout>
   )
 }
 
-export default HomePage
+export default ExplorePage

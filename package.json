@@ -14,9 +14,11 @@
     "subgraph:build": "yarn workspace @project/subgraph build",
     "subgraph:deploy": "yarn workspace @project/subgraph deploy",
     "react-app:build": "yarn workspace @project/react-app build",
+    "react-app:deploy": "yarn react-app:build && cd packages/react-app && npx surge --domain decentralized-twitter.surge.sh .next",
     "react-app:eject": "yarn workspace @project/react-app eject",
     "react-app:ipfs": "yarn workspace @project/react-app ipfs",
     "react-app:start": "yarn workspace @project/react-app start",
+    "react-app:dev": "yarn workspace @project/react-app dev",
     "react-app:test": "yarn workspace @project/react-app test"
   },
   "workspaces": {

@@ -1,6 +1,6 @@
 import React from 'react'
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict'
-import { deleteTweet } from '../../store/web3/hooks'
+import { useTweets } from '../../store/web3/hooks'
 import styles from './style.module.css'
 import Photo from '../photo'
 import IconButton from '../button/icon'
@@ -25,6 +25,16 @@ function Tweet({
   // user.name
   // user.profile_image_url_https
   // user.screen_name
+
+  const [, , , , deleteTweet] = useTweets()
+
+  const onDelete = async () => {
+    try {
+      await deleteTweet(id)
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   if (userId == '0x0000000000000000000000000000000000000000') {
     return <div />

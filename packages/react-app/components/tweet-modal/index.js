@@ -6,10 +6,11 @@ import ThemeButton from '../theme-button'
 import IconButton from '../button/icon'
 import { Close } from '../icons'
 import Stack from '../stack'
-import { sendTweet } from '../../store/web3/hooks'
+import { useTweets } from '../../store/web3/hooks'
 
 function TweetModal({ onModalClose = () => {}, onClick = () => {} }) {
   const [tweet, tweetSet] = React.useState('')
+  const [, , , sendTweet] = useTweets()
 
   const onSubmit = async () => {
     try {
