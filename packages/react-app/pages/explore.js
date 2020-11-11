@@ -6,7 +6,7 @@ import Tweet from '../components/tweet'
 import { useDispatch } from 'react-redux'
 
 function ExplorePage() {
-  const [tweets, getTweets] = useTweets()
+  const [tweets, , getTweets] = useTweets()
   useEffect(() => {
     getTweets()
   }, [])

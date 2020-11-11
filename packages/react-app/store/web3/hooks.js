@@ -34,7 +34,6 @@ export const useWalletConnect = () => {
     const provider = new Web3Provider(window.web3.currentProvider)
     const accounts = await provider.listAccounts()
     const address = accounts[0]
-    alert(address)
     dispatch(connectWallet({ address }))
 
     // const provider = new Web3Provider(newProvider)
