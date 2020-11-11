@@ -37,7 +37,6 @@ export const useWalletConnect = () => {
     dispatch(connectWallet({ address }))
 
     const _tweets = await getUserTweets()
-    console.log(_tweets)
     dispatch(updateTweets(_tweets.reverse()))
   }, [dispatch])
 
@@ -65,7 +64,7 @@ export const useTweets = () => {
     async (txt) => {
       const send = await sendTweet(txt)
       send.wait().then(async () => {
-        await _getUserTweets()
+        await renderTweetsSwitch()
       })
     },
     [dispatch]
@@ -73,9 +72,20 @@ export const useTweets = () => {
   const _deleteTweet = useCallback(async (_id) => {
     const send = await deleteTweet(_id)
     send.wait().then(async () => {
-      await _getUserTweets()
+      await renderTweetsSwitch()
     })
   })
+
+  const renderTweetsSwitch = async () => {
+    switch (window.location.pathname) {
+      case '/':
+        await _getTweets(15)
+      case '/profile':
+        await _getUserTweets()
+      default:
+        await _getTweets(15)
+    }
+  }
 
   return [tweets, _getUserTweets, _getTweets, _sendTweets, _deleteTweet]
 }
@@ -143,11 +153,17 @@ export const getTweets = async (lastNTweets) => {
       signer
     )
 
-    const tweetCount = await tweetFactory.getTweetCount()
     let tweets = []
-    for (var i = tweetCount; 0 < i && i > tweetCount - lastNTweets; i--) {
+    const tweetCount = await tweetFactory.getTweetCount()
+    let i = tweetCount
+    while (0 < i && i > tweetCount - lastNTweets) {
       const tweet = await tweetFactory.getTweet(i)
-      tweets.push(tweet)
+      if (tweet.userId != '0x0000000000000000000000000000000000000000') {
+        tweets.push(tweet)
+      } else {
+        lastNTweets += 1
+      }
+      i -= 1
     }
     return tweets
   } catch {
